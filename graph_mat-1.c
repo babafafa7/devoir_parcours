@@ -74,8 +74,7 @@ unsigned gm_degree(const graph_mat *g, unsigned v)
   for (int w=0; w<g->n; ++w) {
     d += gm_mult_edge(g,v,w);
   }
-  d += gm_mult_edge(g,v,v); // les boucles comptent
-                            // double
+  d += gm_mult_edge(g,v,v); // les boucles comptent double
   return d;
 }
 
@@ -94,14 +93,25 @@ graph_mat *gm_sum(graph_mat * g1, graph_mat * g2)
 
 graph_mat *gm_prod(graph_mat * g1, graph_mat * g2)
 {
+  int diag = 0;
   graph_mat * g = gm_init(gm_n(g1));
   if (gm_n(g1) != gm_n(g2)) abort();
-
-  /* TODO : à compléter pour calculer la matrice d'adjacence
-     égale au produit des matrices de g1 et g2.
-     Triple boucle nécessaire. */
-
-  /* ne pas oublier de calculer g->m */
+  for(int i = 0; i < gm_n(g); i++){
+	  for (int j = 0; j < gm_n(g); j++){
+		  for (int k = 0; k < gm_n(g); k++){
+				g->adj[i * gm_n(g) + j] += g1->adj[i * gm_n(g) + k] * g2->adj[k * gm_n(g) + j];
+		  }
+		  if(i == j){
+			  diag += g->adj[i * gm_n(g) + j];
+		  }
+		  else {
+			  g->m += g->adj[i * gm_n(g) + j];
+		  }	  
+	  }
+  }
+	g->m /= 2;
+	g->m += diag;
+  //calcul du g->m a revoir 
   
   return g;
 }
@@ -110,7 +120,7 @@ void gm_disp(const graph_mat *g)
 {
 	unsigned v, w;
 	printf("n = %d, m = %d\n", gm_n(g), gm_m(g));
-	for (v = 0; v < gm_n(g); ++v)
+	for (v = 0; v < gm_n(g); ++v){
 		for (w = 0; w < gm_n(g); ++w) {
 			printf("%3d", gm_mult_edge(g, v, w));
 			if (w != gm_n(g) - 1)
@@ -118,6 +128,7 @@ void gm_disp(const graph_mat *g)
 			else
 				printf("\n");
 		}
+  }
 }
 
 int gm_write_dot(const graph_mat *g, const char *filename)
