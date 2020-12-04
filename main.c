@@ -21,8 +21,15 @@ int main(){
     printf("**** graphe de test:\n");
     gm_disp(g);
 
+    parcours_profondeur * profondeur = parcours_en_profondeur_iter(g, 0);
+    liste_afficher(profondeur->N);
+    liste_afficher(profondeur->prefixe);
+    liste_afficher(profondeur->suffixe);
+    liste_afficher(profondeur->pere);
+
     /* __libération de la mémoire du graphe de test*/
     gm_free(g);
+    detruire_parcours_profondeur(profondeur);
 
     return 0;
 }
