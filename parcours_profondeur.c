@@ -17,3 +17,7 @@ parcours_largeur* parcours_en_largeur_iter(graph_mat*, int sommet_depart){
 parcours_largeur* parcours_en_largeur_iter(graph_mat*, int sommet_depart){
     
 }
+
+void afficher_listes(parcours_largeur*){
+    
+}

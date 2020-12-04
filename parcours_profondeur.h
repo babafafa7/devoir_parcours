@@ -17,5 +17,6 @@ parcours_largeur* parcours_largeur_construire(int taille_listes, int sommet_depa
 void detruire_parcours_profondeur(parcours_largeur*);
 parcours_largeur* parcours_en_largeur_iter(graph_mat*, int sommet_depart);
 parcours_largeur* parcours_en_largeur_rec(graph_mat*, int sommet_depart);
+void afficher_listes(parcours_largeur*);
 
 #endif
