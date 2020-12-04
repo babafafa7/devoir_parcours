@@ -62,14 +62,14 @@ graph_mat *gm_random(unsigned n, double p);
  * Prend en paramètre deux graphes g1 et g2 qui doivent être de même ordre.
  * Retourne un pointeur vers un nouveau graphe de même ordre que g1 et g2,
  * dont la matrice d'adjacence est la somme des matrices de g1 et g2
- * ou bien NULL en cas d'échec d'allocation */
+ * ou bien NULL en cas d'échec d'allocation 
 graph_mat *gm_sum(graph_mat * g1, graph_mat * g2);
 
-/* Constructeur produit
+ Constructeur produit
  * Prend en paramètre deux graphes g1 et g2 qui doivent être de même ordre.
  * Retourne un pointeur vers un nouveau graphe de même ordre que g1 et g2,
  * dont la matrice d'adjacence est le produit des matrices de g1 et g2
- * ou bien NULL en cas d'échec d'allocation */
-graph_mat *gm_prod(graph_mat * g1, graph_mat * g2);
+ * ou bien NULL en cas d'échec d'allocation 
+graph_mat *gm_prod(graph_mat * g1, graph_mat * g2);*/
 
 #endif /* ifndef GRAPH_MAT_1 */

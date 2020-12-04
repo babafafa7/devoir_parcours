@@ -15,13 +15,13 @@ graph_mat *gm_init(unsigned n)
   graph_mat * g = calloc(sizeof(graph_mat), 1);
   if (g==NULL) {
     printf("Erreur d'allocation !\n");
-    abort(); // sort du programme
+    abort(); /* sort du programme */
   }
   g->n = n;
   g->adj = calloc(sizeof(unsigned), n * n);
   if (g->adj==NULL) {
     printf("Erreur d'allocation !\n");
-    abort(); // sort du programme
+    abort(); /* sort du programme */
   }
   
   return g;
@@ -71,49 +71,12 @@ void gm_rm_edge(graph_mat *g, unsigned v, unsigned w)
 unsigned gm_degree(const graph_mat *g, unsigned v)
 {
   unsigned d = 0;
-  for (int w=0; w<g->n; ++w) {
+  unsigned w;
+  for(w=0; w<g->n; ++w){
     d += gm_mult_edge(g,v,w);
   }
-  d += gm_mult_edge(g,v,v); // les boucles comptent double
+  d += gm_mult_edge(g,v,v); /* les boucles comptent double */
   return d;
-}
-
-graph_mat *gm_sum(graph_mat * g1, graph_mat * g2)
-{
-  graph_mat * g = gm_init(gm_n(g1));
-  if (gm_n(g1) != gm_n(g2)) abort();
-
-  for (int v=0; v<gm_n(g); ++v)
-    for (int w=0; w<gm_n(g); ++w)
-      g[v*g->n + w] = g1[v*g->n + w] + g2[v*g->n + w];
-  g->m = g1->m + g2->m;
-  
-  return g;
-}
-
-graph_mat *gm_prod(graph_mat * g1, graph_mat * g2)
-{
-  int diag = 0;
-  graph_mat * g = gm_init(gm_n(g1));
-  if (gm_n(g1) != gm_n(g2)) abort();
-  for(int i = 0; i < gm_n(g); i++){
-	  for (int j = 0; j < gm_n(g); j++){
-		  for (int k = 0; k < gm_n(g); k++){
-				g->adj[i * gm_n(g) + j] += g1->adj[i * gm_n(g) + k] * g2->adj[k * gm_n(g) + j];
-		  }
-		  if(i == j){
-			  diag += g->adj[i * gm_n(g) + j];
-		  }
-		  else {
-			  g->m += g->adj[i * gm_n(g) + j];
-		  }	  
-	  }
-  }
-	g->m /= 2;
-	g->m += diag;
-  //calcul du g->m a revoir 
-  
-  return g;
 }
 
 void gm_disp(const graph_mat *g)
