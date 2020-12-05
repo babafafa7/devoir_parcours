@@ -20,5 +20,5 @@ parcours_profondeur* parcours_profondeur_construire(int taille_listes, int somme
 void detruire_parcours_profondeur(parcours_profondeur*);
 void parcours_en_profondeur_iter(parcours_profondeur*, graph_mat*);
 parcours_profondeur* parcours_en_profondeur_rec(graph_mat*, int sommet_depart);
-
+int parcours_write_dot(parcours_profondeur* p, const char *filename);
 #endif

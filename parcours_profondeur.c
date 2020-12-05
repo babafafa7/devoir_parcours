@@ -81,3 +81,33 @@ void parcours_en_profondeur_iter(parcours_profondeur* p, graph_mat * g){
 parcours_profondeur* parcours_en_profondeur_rec(graph_mat* g , int sommet_depart){
     return NULL;
 }
+
+int parcours_write_dot(parcours_profondeur* p, const char *filename)
+{
+	/* début solution */
+	FILE *f;
+	int v;
+
+	f = fopen(filename, "w");
+	if (f == NULL) {
+		perror("fopen in parcours_write_dot");
+		return -1;
+	}
+
+	fprintf(f, "digraph {\n");
+	for(v=0; v<liste_get_n(p->parcours);v++){
+        fprintf(f, "\t%d;\n", v);
+    }
+		
+
+	fprintf(f, "\n");
+    
+	for(v =1; v< liste_get_n(p->parcours); v++){
+        fprintf(f, "\t%d -> %d;\n", p->pere[v], v);
+    }
+        
+	fprintf(f, "}\n");
+	fclose(f);
+	/* fin solution */
+	return 0;
+}
