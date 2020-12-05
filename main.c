@@ -7,6 +7,8 @@ int main(){
     parcours_profondeur * profondeur;
     unsigned int i,j;
     int* tab;
+    /* __ graphe orienté pour le parcours en profondeur */
+    graph_mat* g1 = gm_init(8);
     /* __création du graph de test */
     graph_mat* g = gm_init(8);
     gm_add_edge(g, 0, 1);
@@ -23,6 +25,8 @@ int main(){
     /* __affichage matrice d'adjacence du graph test */
     printf("**** graphe de test:\n");
     gm_disp(g);
+
+    /* __parcours en profondeur (version iterative)*/
     profondeur = parcours_profondeur_construire(gm_n(g), 0);
     parcours_en_profondeur_iter(profondeur, g);
 
@@ -43,9 +47,16 @@ int main(){
         printf("%d \t %d \t %d \t %d\n",i,profondeur->parcours->tab[i] + 1,tab[i],profondeur->pere[i]);
     }
 
-    /* __libération de la mémoire du graphe de test*/
+    /* __génération du graphe orienté par le le parcours en profondeur (version iterative) */
+    for (i=1; i<gm_n(g1);i++){
+        gm_add_edge(g1,profondeur->pere[i],i);
+    }
+   
+    gm_write_dot(g1,"parcours_profondeur.dot");
+    /* __libération de la mémoire */
     free(tab);
     gm_free(g);
+    gm_free(g1);
     detruire_parcours_profondeur(profondeur);
 
     return 0;
