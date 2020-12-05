@@ -52,7 +52,6 @@ int main(){
     /* __libération de la mémoire */
     free(tab);
     gm_free(g);
-    gm_free(g1);
     detruire_parcours_profondeur(profondeur);
 
     return 0;
