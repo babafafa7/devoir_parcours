@@ -26,6 +26,7 @@ int main(){
     profondeur = parcours_profondeur_construire(gm_n(g), 0);
     parcours_en_profondeur_iter(profondeur, g);
 
+    /* __permet de préciser le rang de visite complete de chaque noeud */
     tab = malloc(sizeof(int)*gm_n(g));
     for(i=0; i<gm_n(g);i++){
         for(j=0; j<gm_n(g);j++){
@@ -35,6 +36,8 @@ int main(){
         }
     }
 
+    /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
+    printf("*** donnees obtenues pour le parcours (version iterative):\n");
     printf("sommet\tprefixe\tsuffixe\tpere\n");
     for(i = 0; i< gm_n(g); i++){
         printf("%d \t %d \t %d \t %d\n",i,profondeur->parcours->tab[i] + 1,tab[i],profondeur->pere[i]);

@@ -10,7 +10,7 @@ struct s_parcours_profondeur {
     int d;              /* __sommet départ du parcours */
     liste* parcours;    /* __liste d'ordre de visite des sommets */
     liste* suffixe;     /* __liste d'ordre de sommets totalement exploré */
-    liste* pile;
+    liste* pile;        /* __pile utile au fonctionnement du parcours en profondeur */
     int* pere;          /* __tableau des pères de chaque sommet dans l'arborescence du parcours */
 };
 
