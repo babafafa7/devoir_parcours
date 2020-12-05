@@ -1,9 +1,12 @@
+#include "parcours_profondeur.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "parcours_profondeur.h"
 
 
 int main(){
+    parcours_profondeur * profondeur;
+    unsigned int i,j;
+    int* tab;
     /* __création du graph de test */
     graph_mat* g = gm_init(8);
     gm_add_edge(g, 0, 1);
@@ -20,14 +23,25 @@ int main(){
     /* __affichage matrice d'adjacence du graph test */
     printf("**** graphe de test:\n");
     gm_disp(g);
+    profondeur = parcours_profondeur_construire(gm_n(g), 0);
+    parcours_en_profondeur_iter(profondeur, g);
 
-    parcours_profondeur * profondeur = parcours_en_profondeur_iter(g, 0);
-    liste_afficher(profondeur->N);
-    liste_afficher(profondeur->prefixe);
-    liste_afficher(profondeur->suffixe);
-    liste_afficher(profondeur->pere);
+    tab = malloc(sizeof(int)*gm_n(g));
+    for(i=0; i<gm_n(g);i++){
+        for(j=0; j<gm_n(g);j++){
+            if((int)i == profondeur->suffixe->tab[j]){
+                tab[i]=j+1;
+            }
+        }
+    }
+
+    printf("sommet\tprefixe\tsuffixe\tpere\n");
+    for(i = 0; i< gm_n(g); i++){
+        printf("%d \t %d \t %d \t %d\n",i,profondeur->parcours->tab[i] + 1,tab[i],profondeur->pere[i]);
+    }
 
     /* __libération de la mémoire du graphe de test*/
+    free(tab);
     gm_free(g);
     detruire_parcours_profondeur(profondeur);
 
