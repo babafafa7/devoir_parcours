@@ -19,6 +19,6 @@ typedef struct s_parcours_profondeur parcours_profondeur;
 parcours_profondeur* parcours_profondeur_construire(int taille_listes, int sommet_depart);
 void detruire_parcours_profondeur(parcours_profondeur*);
 void parcours_en_profondeur_iter(parcours_profondeur*, graph_mat*);
-parcours_profondeur* parcours_en_profondeur_rec(graph_mat*, int sommet_depart);
+void parcours_en_profondeur_rec(parcours_profondeur*, graph_mat*);
 int parcours_write_dot(parcours_profondeur* p, const char *filename);
 #endif

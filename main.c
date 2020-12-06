@@ -4,9 +4,9 @@
 
 
 int main(){
-    parcours_profondeur * profondeur;
+    parcours_profondeur *profondeur_iter, *profondeur_rec;
     unsigned int i,j;
-    int* tab;
+    int *tab, *tab2;
 
     /* __création du graph de test */
     graph_mat* g = gm_init(8);
@@ -25,16 +25,17 @@ int main(){
     printf("**** graphe de test:\n");
     gm_disp(g);
 
-    /* __parcours en profondeur (version iterative)*/
-    profondeur = parcours_profondeur_construire(gm_n(g), 0);
-    parcours_en_profondeur_iter(profondeur, g);
+    /* __parcours en profondeur_iter (version iterative)*/
+    profondeur_iter = parcours_profondeur_construire(gm_n(g), 0);
+    parcours_en_profondeur_iter(profondeur_iter, g);
 
     /* __permet de préciser le rang de visite complete de chaque noeud */
     tab = malloc(sizeof(int)*gm_n(g));
     for(i=0; i<gm_n(g);i++){
         for(j=0; j<gm_n(g);j++){
-            if((int)i == profondeur->suffixe->tab[j]){
+            if((int)i == profondeur_iter->suffixe->tab[j]){
                 tab[i]=j+1;
+                break;
             }
         }
     }
@@ -43,16 +44,43 @@ int main(){
     printf("*** donnees obtenues pour le parcours (version iterative):\n");
     printf("sommet\tprefixe\tsuffixe\tpere\n");
     for(i = 0; i< gm_n(g); i++){
-        printf("%d \t %d \t %d \t %d\n",i,profondeur->parcours->tab[i] + 1,tab[i],profondeur->pere[i]);
+        printf("%d \t %d \t %d \t %d\n",i,profondeur_iter->parcours->tab[i] + 1,tab[i],profondeur_iter->pere[i]);
     }
 
-    /* __crée le fichier parcours_profondeur.dot contenant le graphe orienté du parcours en profondeur */
-    parcours_write_dot(profondeur,"parcours_profondeur.dot");
+    /* __crée le fichier parcours_profondeur_iter.dot contenant le graphe orienté du parcours en profondeur_iter */
+    parcours_write_dot(profondeur_iter,"parcours_profondeur_iter.dot");
+
+    /* __parcours en profondeur (version récursive)*/
+    profondeur_rec = parcours_profondeur_construire(gm_n(g), 0);
+    parcours_en_profondeur_rec(profondeur_rec, g);
+
+    /* __permet de préciser le rang de visite complete de chaque noeud */
+    tab2 = malloc(sizeof(int)*gm_n(g));
+    for(i=0; i<gm_n(g);i++){
+        for(j=0; j<gm_n(g);j++){
+            if((int)i == profondeur_rec->suffixe->tab[j]){
+                tab2[i]=j+1;
+                break;
+            }
+        }
+    }
+
+    /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
+    printf("\n*** donnees obtenues pour le parcours (version récursive):\n");
+    printf("sommet\tprefixe\tsuffixe\tpere\n");
+    for(i = 0; i< gm_n(g); i++){
+        printf("%d \t %d \t %d \t %d\n",i,profondeur_rec->parcours->tab[i] + 1,tab2[i],profondeur_rec->pere[i]);
+    }
+
+    /* __crée le fichier parcours_profondeur_rec.dot contenant le graphe orienté du parcours en profondeur_rec */
+    parcours_write_dot(profondeur_rec,"parcours_profondeur_rec.dot");
 
     /* __libération de la mémoire */
     free(tab);
+    free(tab2);
     gm_free(g);
-    detruire_parcours_profondeur(profondeur);
+    detruire_parcours_profondeur(profondeur_iter);
+    detruire_parcours_profondeur(profondeur_rec);
 
     return 0;
 }

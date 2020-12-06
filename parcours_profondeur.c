@@ -25,7 +25,9 @@ parcours_profondeur* parcours_profondeur_construire(int taille_listes, int somme
         parcours->pile = liste_construire(taille_listes);
         parcours->suffixe = liste_construire(taille_listes);
         parcours->pere = malloc(sizeof(int)*taille_listes);
-        
+
+        /* __initialisation du pere du sommet de départ */
+        parcours->pere[0] =-1;
     }
     return parcours;
 }
@@ -44,42 +46,53 @@ void detruire_parcours_profondeur(parcours_profondeur* p){
 }
 
 void parcours_en_profondeur_iter(parcours_profondeur* p, graph_mat * g){
-    
 
     while(!liste_est_pleine(p->parcours)){
         liste_ajouter_debut(p->pile, p->d);
         liste_ajouter_fin(p->parcours, p->d );
-        p->pere[0]=-1;
         while(!liste_est_vide(p->pile)){
             int* elt = liste_get_debut(p->pile);
-            int inclus = 1;
+            int brk = 1;
             unsigned int j;
             for(j = 0; j < gm_n(g); j++){
                 if(((gm_mult_edge(g,(*elt),j)) >= 1) && (liste_contient_element(p->parcours,j) != 1)){
-                    inclus = 0;
+                    brk = 0;
+                    liste_ajouter_debut(p->pile, j);
+                    liste_ajouter_fin(p->parcours, j);
+                    p->pere[j] = (*elt);
+                    break;
                 }
             }
-            if(inclus){
+            if(brk){
                 liste_supprimer_debut(p->pile,elt);
                 liste_ajouter_fin(p->suffixe, (*elt));
-            }
-            else{
-                for(j = 0; j < gm_n(g); j++){
-                    if(((gm_mult_edge(g,(*elt),j)) >= 1) && (liste_contient_element(p->parcours,j) != 1)){
-                        liste_ajouter_debut(p->pile, j);
-                        liste_ajouter_fin(p->parcours, j);
-                        p->pere[j] = (*elt);
-                        break;
-                    }
-                    
-                }
-            }  
+            } 
         }
     }
 }
 
-parcours_profondeur* parcours_en_profondeur_rec(graph_mat* g , int sommet_depart){
-    return NULL;
+void parcours_en_profondeur_rec(parcours_profondeur* p, graph_mat* g){
+    int brk, *elt;
+    unsigned int j;
+    if(p->d != -1){
+        liste_ajouter_fin(p->parcours, p->d);
+        elt = &(p->d);
+        brk = 1;
+        for(j = 0; j < gm_n(g); j++){
+            if(((gm_mult_edge(g,*elt,j)) >= 1) && (liste_contient_element(p->parcours,j) != 1)){
+                brk = 0;
+                p->pere[j] = p->d;
+                p->d = j;
+                parcours_en_profondeur_rec(p, g);
+                break;
+            }
+        }
+        if(brk){
+            liste_ajouter_fin(p->suffixe, *elt);
+            p->d = p->pere[*elt];
+            parcours_en_profondeur_rec(p, g);
+        }
+    }
 }
 
 int parcours_write_dot(parcours_profondeur* p, const char *filename)
