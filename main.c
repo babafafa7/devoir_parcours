@@ -5,8 +5,8 @@
 
 int main(){
     parcours_profondeur *profondeur_iter, *profondeur_rec;
-    unsigned int i,j;
-    int *tab, *tab2;
+    unsigned int i;
+    int *tab;
 
     /* __création du graph de test */
     graph_mat* g = gm_init(8);
@@ -31,14 +31,7 @@ int main(){
 
     /* __permet de préciser le rang de visite complete de chaque noeud */
     tab = malloc(sizeof(int)*gm_n(g));
-    for(i=0; i<gm_n(g);i++){
-        for(j=0; j<gm_n(g);j++){
-            if((int)i == profondeur_iter->suffixe->tab[j]){
-                tab[i]=j+1;
-                break;
-            }
-        }
-    }
+    suffixe(profondeur_iter, tab);
 
     /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
     printf("*** donnees obtenues pour le parcours (version iterative):\n");
@@ -55,21 +48,13 @@ int main(){
     parcours_en_profondeur_rec(profondeur_rec, g);
 
     /* __permet de préciser le rang de visite complete de chaque noeud */
-    tab2 = malloc(sizeof(int)*gm_n(g));
-    for(i=0; i<gm_n(g);i++){
-        for(j=0; j<gm_n(g);j++){
-            if((int)i == profondeur_rec->suffixe->tab[j]){
-                tab2[i]=j+1;
-                break;
-            }
-        }
-    }
+    suffixe(profondeur_rec, tab);
 
     /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
     printf("\n*** donnees obtenues pour le parcours (version récursive):\n");
     printf("sommet\tprefixe\tsuffixe\tpere\n");
     for(i = 0; i< gm_n(g); i++){
-        printf("%d \t %d \t %d \t %d\n",i,profondeur_rec->parcours->tab[i] + 1,tab2[i],profondeur_rec->pere[i]);
+        printf("%d \t %d \t %d \t %d\n",i,profondeur_rec->parcours->tab[i] + 1,tab[i],profondeur_rec->pere[i]);
     }
 
     /* __crée le fichier parcours_profondeur_rec.dot contenant le graphe orienté du parcours en profondeur_rec */
@@ -77,7 +62,6 @@ int main(){
 
     /* __libération de la mémoire */
     free(tab);
-    free(tab2);
     gm_free(g);
     detruire_parcours_profondeur(profondeur_iter);
     detruire_parcours_profondeur(profondeur_rec);
