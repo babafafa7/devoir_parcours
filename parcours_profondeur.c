@@ -115,8 +115,10 @@ int parcours_write_dot(parcours_profondeur* p, const char *filename){
 
 	fprintf(f, "\n");
     
-	for(v =1; v< liste_get_n(p->prefixe); v++){
-        fprintf(f, "\t%d -> %d;\n", p->pere[v], v);
+	for(v =0; v< liste_get_n(p->prefixe); v++){
+        if(p->pere[v] != -1){
+            fprintf(f, "\t%d -> %d;\n", p->pere[v], v);
+        }
     }
         
 	fprintf(f, "}\n");

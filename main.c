@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SOMMET_DEPART 0
 
 int main(){
     parcours_profondeur *profondeur_iter, *profondeur_rec = NULL;
@@ -25,7 +26,7 @@ int main(){
     gm_disp(g);
 
     /* __parcours en profondeur_iter (version iterative)*/
-    profondeur_iter = parcours_en_profondeur_iter(g, 0);
+    profondeur_iter = parcours_en_profondeur_iter(g, SOMMET_DEPART);
     
     /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
     printf("*** donnees obtenues pour le parcours (version iterative):\n");
@@ -38,7 +39,7 @@ int main(){
     parcours_write_dot(profondeur_iter,"parcours_profondeur_iter.dot");
 
     /* __parcours en profondeur (version récursive)*/
-    profondeur_rec = parcours_en_profondeur_rec(g, profondeur_rec, 0);
+    profondeur_rec = parcours_en_profondeur_rec(g, profondeur_rec, SOMMET_DEPART);
 
     /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
     printf("\n*** donnees obtenues pour le parcours (version récursive):\n");
