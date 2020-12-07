@@ -17,11 +17,8 @@ parcours_profondeur* parcours_profondeur_construire(int taille_listes, int somme
     parcours = (parcours_profondeur*) malloc(sizeof(parcours_profondeur));
 
     if(parcours != NULL){
-        /* __sommet de départ */
-        parcours->d = sommet_depart;
-
         /* __Allocations des listes*/
-        parcours->parcours = liste_construire(taille_listes);
+        parcours->prefixe = liste_construire(taille_listes);
         parcours->pile = liste_construire(taille_listes);
         parcours->suffixe = liste_construire(taille_listes);
 
@@ -29,7 +26,7 @@ parcours_profondeur* parcours_profondeur_construire(int taille_listes, int somme
         parcours->pere = malloc(sizeof(int)*taille_listes);
 
         /* __initialisation du pere du sommet de départ */
-        parcours->pere[0] =-1;
+        parcours->pere[sommet_depart] = -1;
     }
     return parcours;
 }
@@ -37,7 +34,7 @@ parcours_profondeur* parcours_profondeur_construire(int taille_listes, int somme
 void detruire_parcours_profondeur(parcours_profondeur* p){
     if(p != NULL){
         /* __ libération de la mémoire allouée pour les listes de la structure */
-        liste_detruire(&(p->parcours));
+        liste_detruire(&(p->prefixe));
         liste_detruire(&(p->pile));
         liste_detruire(&(p->suffixe));
         free(p->pere);
@@ -47,19 +44,19 @@ void detruire_parcours_profondeur(parcours_profondeur* p){
 	free(p);
 }
 
-void parcours_en_profondeur_iter(parcours_profondeur* p, graph_mat * g){
-
-    liste_ajouter_debut(p->pile, p->d);                 /* __On place le sommet de depart dans la pile */
-    liste_ajouter_fin(p->parcours, p->d );              /* __et on le marque comme visité (on le place dans la liste parcours) */
+parcours_profondeur* parcours_en_profondeur_iter(graph_mat * g , int sommet_depart){
+    parcours_profondeur* p = parcours_profondeur_construire(gm_n(g), sommet_depart);
+    liste_ajouter_debut(p->pile, sommet_depart);        /* __On place le sommet de depart dans la pile */
+    liste_ajouter_fin(p->prefixe, sommet_depart);       /* __et on le marque comme visité (on le place dans la liste prefixe) */
     while(!liste_est_vide(p->pile)){                    /* __Tant que la pile n'est pas vide */
         int* elt = liste_get_debut(p->pile);            /* __On prend element au sommet de la pile */
         int brk = 1;
         unsigned int j;
         for(j = 0; j < gm_n(g); j++){                   /* __On cherche s'il a des fils non visités */
-            if(((gm_mult_edge(g,(*elt),j)) >= 1) && (liste_contient_element(p->parcours,j) != 1)){ 
+            if(((gm_mult_edge(g,(*elt),j)) >= 1) && (liste_contient_element(p->prefixe,j) != 1)){ 
                 brk = 0;
                 liste_ajouter_debut(p->pile, j);        /* __Si oui on place le fils en tete de pile */ 
-                liste_ajouter_fin(p->parcours, j);      /* __et on le marque comme visité (on le place dans la liste parcours) */
+                liste_ajouter_fin(p->prefixe, j);       /* __et on le marque comme visité (on le place dans la liste prefixe) */
                 p->pere[j] = (*elt);                    /* __puis on marque le pere de fils */
                 break;
             }
@@ -69,30 +66,35 @@ void parcours_en_profondeur_iter(parcours_profondeur* p, graph_mat * g){
             liste_ajouter_fin(p->suffixe, (*elt));      /* __On le marque comme totalement visité (place dans la liste suffixe)*/
         } 
     }
+    return p;
 }
 
-void parcours_en_profondeur_rec(parcours_profondeur* p, graph_mat* g){
+parcours_profondeur* parcours_en_profondeur_rec(graph_mat* g, parcours_profondeur* p, int sommet_depart){
     int brk, *elt;
     unsigned int j;
-    if(p->d != -1){                                 /* __Si le sommet de départ est le sommet -1 on ne fait rien */
-        liste_ajouter_fin(p->parcours, p->d);       /* __Sinon on le marque comme visité (on le place dans la liste parcours */
-        elt = &(p->d);
+    if(p == NULL){
+        p = parcours_profondeur_construire(gm_n(g), sommet_depart);
+    }
+    if(sommet_depart != -1){                                        /* __Si le sommet de départ est le sommet -1 on ne fait rien */
+        liste_ajouter_fin(p->prefixe, sommet_depart);               /* __Sinon on le marque comme visité (on le place dans la liste prefixe */
+        elt = &(sommet_depart);
         brk = 1;
-        for(j = 0; j < gm_n(g); j++){               /* __On cherche s'il a des fils non visités */
-            if(((gm_mult_edge(g,*elt,j)) >= 1) && (liste_contient_element(p->parcours,j) != 1)){
+        for(j = 0; j < gm_n(g); j++){                               /* __On cherche s'il a des fils non visités */
+            if(((gm_mult_edge(g,*elt,j)) >= 1) && (liste_contient_element(p->prefixe,j) != 1)){
                 brk = 0;                            
-                p->pere[j] = p->d;                  /* __Si oui on marque le pere du fils */
-                p->d = j;                           /* __puis on marque le fils comme sommet de depart */
-                parcours_en_profondeur_rec(p, g);   /* __On appelle la fonction recursivement avec le nouveau sommet de départ */
+                p->pere[j] = sommet_depart;                         /* __Si oui on marque le pere du fils */
+                sommet_depart = j;                                  /* __puis on marque le fils comme sommet de depart */
+                p = parcours_en_profondeur_rec(g, p, sommet_depart);/* __On appelle la fonction recursivement avec le nouveau sommet de départ */
                 break;
             }
         }
         if(brk){
-            liste_ajouter_fin(p->suffixe, *elt);    /* __Sinon on le marque comme totalement visité (place dans la liste suffixe) */
-            p->d = p->pere[*elt];                   /* __On marque son pere comme nouveau sommet de depart */
-            parcours_en_profondeur_rec(p, g);       /* __Puis on appelle la fonction recursivement avec le nouveau sommet de départ */
+            liste_ajouter_fin(p->suffixe, *elt);                    /* __Sinon on le marque comme totalement visité (place dans la liste suffixe) */
+            sommet_depart = p->pere[*elt];                          /* __On marque son pere comme nouveau sommet de depart */
+            p = parcours_en_profondeur_rec(g, p, sommet_depart);    /* __Puis on appelle la fonction recursivement avec le nouveau sommet de départ */
         }   
     }
+    return p;
 }
 
 int parcours_write_dot(parcours_profondeur* p, const char *filename){
@@ -106,30 +108,18 @@ int parcours_write_dot(parcours_profondeur* p, const char *filename){
 	}
 
 	fprintf(f, "digraph {\n");
-	for(v=0; v<liste_get_n(p->parcours);v++){
+	for(v=0; v<liste_get_n(p->prefixe);v++){
         fprintf(f, "\t%d;\n", v);
     }
 		
 
 	fprintf(f, "\n");
     
-	for(v =1; v< liste_get_n(p->parcours); v++){
+	for(v =1; v< liste_get_n(p->prefixe); v++){
         fprintf(f, "\t%d -> %d;\n", p->pere[v], v);
     }
         
 	fprintf(f, "}\n");
 	fclose(f);	
 	return 0;
-}
-
-void suffixe(parcours_profondeur* p, int* tab){
-    int i,j;
-    for(i=0; i< p->suffixe->n;i++){
-        for(j=0; j< p->suffixe->n;j++){
-            if((int)i == p->suffixe->tab[j]){
-                tab[i]=j+1;
-                break;
-            }
-        }
-    }
 }

@@ -4,9 +4,8 @@
 
 
 int main(){
-    parcours_profondeur *profondeur_iter, *profondeur_rec;
+    parcours_profondeur *profondeur_iter, *profondeur_rec = NULL;
     unsigned int i;
-    int *tab;
 
     /* __création du graph de test */
     graph_mat* g = gm_init(8);
@@ -26,42 +25,32 @@ int main(){
     gm_disp(g);
 
     /* __parcours en profondeur_iter (version iterative)*/
-    profondeur_iter = parcours_profondeur_construire(gm_n(g), 0);
-    parcours_en_profondeur_iter(profondeur_iter, g);
-
-    /* __permet de préciser le rang de visite complete de chaque noeud */
-    tab = malloc(sizeof(int)*gm_n(g));
-    suffixe(profondeur_iter, tab);
-
+    profondeur_iter = parcours_en_profondeur_iter(g, 0);
+    
     /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
     printf("*** donnees obtenues pour le parcours (version iterative):\n");
     printf("sommet\tprefixe\tsuffixe\tpere\n");
     for(i = 0; i< gm_n(g); i++){
-        printf("%d \t %d \t %d \t %d\n",i,profondeur_iter->parcours->tab[i] + 1,tab[i],profondeur_iter->pere[i]);
+        printf("%d \t %d \t %d \t %d\n",i,profondeur_iter->prefixe->tab[i] + 1,profondeur_iter->suffixe->pos[i] +1,profondeur_iter->pere[i]);
     }
 
     /* __crée le fichier parcours_profondeur_iter.dot contenant le graphe orienté du parcours en profondeur_iter */
     parcours_write_dot(profondeur_iter,"parcours_profondeur_iter.dot");
 
     /* __parcours en profondeur (version récursive)*/
-    profondeur_rec = parcours_profondeur_construire(gm_n(g), 0);
-    parcours_en_profondeur_rec(profondeur_rec, g);
-
-    /* __permet de préciser le rang de visite complete de chaque noeud */
-    suffixe(profondeur_rec, tab);
+    profondeur_rec = parcours_en_profondeur_rec(g, profondeur_rec, 0);
 
     /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
     printf("\n*** donnees obtenues pour le parcours (version récursive):\n");
     printf("sommet\tprefixe\tsuffixe\tpere\n");
     for(i = 0; i< gm_n(g); i++){
-        printf("%d \t %d \t %d \t %d\n",i,profondeur_rec->parcours->tab[i] + 1,tab[i],profondeur_rec->pere[i]);
+        printf("%d \t %d \t %d \t %d\n",i,profondeur_rec->prefixe->tab[i] + 1,profondeur_rec->suffixe->pos[i] +1,profondeur_rec->pere[i]);
     }
 
     /* __crée le fichier parcours_profondeur_rec.dot contenant le graphe orienté du parcours en profondeur_rec */
     parcours_write_dot(profondeur_rec,"parcours_profondeur_rec.dot");
 
     /* __libération de la mémoire */
-    free(tab);
     gm_free(g);
     detruire_parcours_profondeur(profondeur_iter);
     detruire_parcours_profondeur(profondeur_rec);

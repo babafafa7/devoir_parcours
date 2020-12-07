@@ -7,8 +7,7 @@
 #define PARCOURS_PROFONDEUR_H
 
 struct s_parcours_profondeur {
-    int d;              /* __sommet de départ du parcours */
-    liste* parcours;    /* __liste d'ordre de visite des sommets (PREFIXE) */
+    liste* prefixe;    /* __liste d'ordre de visite des sommets */
     liste* suffixe;     /* __liste d'ordre de sommets totalement exploré */
     liste* pile;        /* __pile utile au fonctionnement du parcours en profondeur (version itérative) */
     int* pere;          /* __tableau des pères de chaque sommet dans l'arborescence du parcours */
@@ -23,18 +22,15 @@ parcours_profondeur* parcours_profondeur_construire(int taille_listes, int somme
 void detruire_parcours_profondeur(parcours_profondeur* p);
 
 /* __Réalise le parcours en profondeur (version itérative) */
-void parcours_en_profondeur_iter(parcours_profondeur*, graph_mat*);
+parcours_profondeur* parcours_en_profondeur_iter(graph_mat* g, int sommet_depart);
 
-/* __Réalise le parcours en profondeur (version itérative) */
-void parcours_en_profondeur_rec(parcours_profondeur*, graph_mat*);
+/* __Réalise le parcours en profondeur (version récursive) */
+parcours_profondeur* parcours_en_profondeur_rec(graph_mat* g, parcours_profondeur* p, int sommet_depart);
 
 /* Fonction d'entrée-sortie
  * Écrit le graphe orienté d'un parcours_profondeur au format dot dans le fichier de nom filename.
  * retourne une valeur négative en cas d'erreur (fichier non ouvrable en
  * écriture, ...) et 0 sinon. */
 int parcours_write_dot(parcours_profondeur* p, const char *filename);
-
-/* __Permet de préciser le rang de visite complete de chaque noeud d'un parcours dans le tableau tab */
-void suffixe(parcours_profondeur*, int* tab);
 
 #endif
