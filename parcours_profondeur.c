@@ -7,7 +7,6 @@
 
 parcours_profondeur* parcours_profondeur_construire(int taille_listes, int sommet_depart){
     parcours_profondeur* parcours;
-    int i;
     
     /* __ vérification des paramètres */
 	if((taille_listes <= 0) || (sommet_depart < 0)){
@@ -27,9 +26,6 @@ parcours_profondeur* parcours_profondeur_construire(int taille_listes, int somme
         parcours->pere = malloc(sizeof(int)*taille_listes);
 
         /* __initialisation du pere du sommet de départ */
-        for (i = 0; i < taille_listes; i++){
-            parcours->pere[i] = -2;
-        }
         parcours->pere[sommet_depart]=-1;
     }
     return parcours;
@@ -58,7 +54,7 @@ parcours_profondeur* parcours_en_profondeur_iter(graph_mat * g , int sommet_depa
         }
         else{                                               /* __Sinon on cherche un sommet non visité différent du sommet de départ */
             for (i = 0; i < gm_n(g); i++){
-                if(p->pere[i] == -2){
+                if(!liste_contient_element(p->prefixe, i)){
                     liste_ajouter_debut(p->pile, i);        /* __On le place dans la pile */
                     liste_ajouter_fin(p->prefixe, i);       /* __On le marque comme visité (on le place dans la liste prefixe) */
                     p->pere[i]=-1;                          /* __Puis on marque le père du sommet (-1) car nouvelle composante connexe */
@@ -115,7 +111,7 @@ parcours_profondeur* parcours_en_profondeur_rec(graph_mat* g, parcours_profondeu
     }
     else{                                                           /* __Sinon on cherche s'il y a un sommet non visité */
         for (i = 0; i < gm_n(g); i++){                              
-            if(p->pere[i] == -2){                                   
+            if(!liste_contient_element(p->prefixe, i)){                                   
                 p->pere[i] = -1;                                    /* __On le marque comme nouveau sommet de depart */
                 p = parcours_en_profondeur_rec(g, p, i);            /* __et on parcours tous ses fils */
             }
