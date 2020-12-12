@@ -20,7 +20,7 @@ Contenu de l'archive :
 
 Compilation :
 - make
-Suppression des fichiers de compilation :
+Suppression des fichiers de compilations :
 - make clean
 Suppression des fichiers de compilations et de l'executable :
 - make mrproper
