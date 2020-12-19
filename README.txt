@@ -29,5 +29,5 @@ Execution :
 - ./parcours_profondeur
 
 Enfin afin de visualiser les graphes orientés les commandes correspondants à chaque méthodes sont les suivantes :
--dot -Tx11 parcours_profondeurs_iter.dot -- pour la version itérative
--dot -Tx11 parcours_profondeurs_rec.dot -- pour la version récursive
+- dot -Tx11 parcours_profondeur_iter.dot -- pour la version itérative
+- dot -Tx11 parcours_profondeur_rec.dot -- pour la version récursive
