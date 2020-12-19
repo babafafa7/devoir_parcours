@@ -54,7 +54,7 @@ parcours_profondeur* parcours_en_profondeur_iter(graph_mat * g , int sommet_depa
     }
     
     while(!liste_est_pleine(p->prefixe)){                   /* __Tant que l'on a pas visité tous les sommets */
-        if (liste_est_vide(p->prefixe)){                    /* __ Si le parcours est vide */
+        if (liste_est_vide(p->prefixe)){                    /* __Si le parcours est vide */
             liste_ajouter_debut(p->pile, sommet_depart);    /* __On place le sommet de depart dans la pile */
             liste_ajouter_fin(p->prefixe, sommet_depart);   /* __On le marque comme visité (on le place dans la liste prefixe) */
         }
@@ -133,23 +133,23 @@ int parcours_write_dot(parcours_profondeur* p, const char *filename){
 	FILE *f;
 	int v;
 
-	f = fopen(filename, "w");
+	f = fopen(filename, "w");                               /* __On ouvre un fichier un fichier .dot en écriture */
 	if (f == NULL) {
 		perror("fopen in parcours_write_dot");
 		return -1;
 	}
 
-	fprintf(f, "digraph {\n");
-	for(v=0; v<liste_get_n(p->prefixe);v++){
+	fprintf(f, "digraph {\n");                              /* __On place digraph pour creer une forêt orientée */
+	for(v = 0; v < liste_get_n(p->prefixe);v++){            /* __On écrit tous les sommet du graphe */
         fprintf(f, "\t%d;\n", v);
     }
 		
 
 	fprintf(f, "\n");
     
-	for(v =0; v< liste_get_n(p->prefixe); v++){
-        if(p->pere[v] != -1){
-            fprintf(f, "\t%d -> %d;\n", p->pere[v], v);
+	for(v = 0; v < liste_get_n(p->prefixe); v++){
+        if(p->pere[v] != -1){                               /* __Si le sommet n'est pas un sommet sans père */
+            fprintf(f, "\t%d -> %d;\n", p->pere[v], v);     /* __On crée un arc entre le père du sommet et lui-même */
         }
     }
         

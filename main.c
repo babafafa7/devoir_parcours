@@ -31,12 +31,12 @@ int main(){
     /*__affichage des sommets de leur rang de visite, rang de visite complete et de leur père */
     printf("*** donnees obtenues pour le parcours (version iterative):\n");
     printf("sommet\tprefixe\tsuffixe\tpere\n");
-    for(i = 0; i< gm_n(g); i++){
-        printf("%d \t %d \t %d \t %d\n",i,profondeur_iter->prefixe->tab[i] + 1,profondeur_iter->suffixe->pos[i] +1,profondeur_iter->pere[i]);
+    for(i = 0; i < gm_n(g); i++){
+        printf("%d \t %d \t %d \t %d\n", i, profondeur_iter->prefixe->tab[i] + 1, profondeur_iter->suffixe->pos[i] + 1, profondeur_iter->pere[i]);
     }
 
     /* __crée le fichier parcours_profondeur_iter.dot contenant le graphe orienté du parcours en profondeur_iter */
-    parcours_write_dot(profondeur_iter,"parcours_profondeur_iter.dot");
+    parcours_write_dot(profondeur_iter, "parcours_profondeur_iter.dot");
 
     /* __parcours en profondeur (version récursive)*/
     profondeur_rec = parcours_en_profondeur_rec(g, profondeur_rec, SOMMET_DEPART);
@@ -45,11 +45,11 @@ int main(){
     printf("\n*** donnees obtenues pour le parcours (version récursive):\n");
     printf("sommet\tprefixe\tsuffixe\tpere\n");
     for(i = 0; i< gm_n(g); i++){
-        printf("%d \t %d \t %d \t %d\n",i,profondeur_rec->prefixe->tab[i] + 1,profondeur_rec->suffixe->pos[i] +1,profondeur_rec->pere[i]);
+        printf("%d \t %d \t %d \t %d\n", i, profondeur_rec->prefixe->tab[i] + 1, profondeur_rec->suffixe->pos[i] + 1, profondeur_rec->pere[i]);
     }
 
     /* __crée le fichier parcours_profondeur_rec.dot contenant le graphe orienté du parcours en profondeur_rec */
-    parcours_write_dot(profondeur_rec,"parcours_profondeur_rec.dot");
+    parcours_write_dot(profondeur_rec, "parcours_profondeur_rec.dot");
 
     /* __libération de la mémoire */
     gm_free(g);
