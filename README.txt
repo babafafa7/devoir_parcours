@@ -22,7 +22,7 @@ Compilation :
 - make
 Suppression des fichiers de compilations :
 - make clean
-Suppression des fichiers de compilations et de l'executable :
+Suppression des fichiers de compilations, les fichiers dot et l'executable :
 - make mrproper
  
 Execution :
